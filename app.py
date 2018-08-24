@@ -11,6 +11,9 @@ import arrow
 from flask import Flask, render_template, request, send_file
 from flask import Response
 
+from dao import Dao
+
+
 print('__name__: {}'.format(__name__))
 app = Flask(__name__, static_url_path='')
 
@@ -50,6 +53,29 @@ def images_list_route():
         env_var['value'] = os.getenv(env_var_name)
         env_vars.append(env_var)
     return render_template('env.html', env_vars=env_vars)
+
+# http://localhost:3000/olympic_marathoners?year=1976&sex=m
+# http://localhost:3000/olympic_marathoners?year=1984&sex=f
+@app.route('/olympic_marathoners')
+def olympic_marathoners():
+    year = request.args['year']
+    sex = request.args['sex']
+    dao = Dao()
+    results = dao.marathoners_in_year(year, sex)
+    dao.close()
+    return render_template('marathoners.html', results=results)
+
+# curl -v 'http://localhost:3000/olympic_marathoners_json?year=1992&sex=f'
+@app.route('/olympic_marathoners_json')
+def olympic_marathoners_json():
+    year = request.args['year']
+    sex = request.args['sex']
+    dao = Dao()
+    results = dao.marathoners_in_year(year, sex)
+    dao.close()
+    jstr = json.dumps(results, sort_keys=False, indent=2)
+    return Response(jstr, mimetype='application/json')
+
 
 # private
 

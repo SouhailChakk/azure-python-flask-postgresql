@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script>
+    </script>
+    <style>
+      <link href='css/style.css' rel='stylesheet' type='text/css'/>
+    </style>
+  </head>
+  <body>
+    <h3>Olympic Marathoners</h3>
+    <table border='1'>
+      <tr>
+        <td> Games </td>
+        <td> City </td>
+        <td> Event </td>
+        <td> Medal </td>
+        <td> Name </td>
+        <td> Team </td>
+      <tr>
+      {% for result in results %}
+      <tr>
+        <td> {{ result['games'] }} </td>
+        <td> {{ result['city'] }} </td>
+        <td> {{ result['event'] }} </td>
+        <td> {{ result['metal'] }} </td>
+        <td> {{ result['name'] }} </td>
+        <td> {{ result['team'] }} </td>
+      <tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
