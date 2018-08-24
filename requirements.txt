@@ -1,0 +1,15 @@
+arrow==0.12.1
+click==6.7
+docopt==0.6.2
+first==2.0.1
+Flask==1.0.2
+itsdangerous==0.24
+Jinja2==2.10
+MarkupSafe==1.0
+pip-tools==2.0.2
+psycopg2==2.7.5
+pyspark==2.1.0+hadoop2.7
+python-dateutil==2.7.3
+six==1.11.0
+SQLAlchemy==1.2.11
+Werkzeug==0.14.1
