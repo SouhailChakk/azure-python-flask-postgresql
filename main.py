@@ -1,8 +1,7 @@
 """
 Usage:
-  python main.py query_azure_olympics_db
-  python main.py query_azure_olympics_db_orm
-  python main.py dao_query1
+  python main.py medalists_in_games 2000 summer
+  python main.py marathoners_in_year 1976 m
 Options:
   -h --help     Show this screen.
   --version     Show version.
@@ -189,14 +188,18 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         func = sys.argv[1].lower()
 
-        if func == 'dao_query1':
+        if func == 'medalists_in_games':
             dao = Dao()
-            for i in range(3, 5):
-                print('limit: {}'.format(i))
-                objects = dao.query1(i)
-                print(json.dumps(objects, sort_keys=True, indent=2))
+            objects = dao.medalists_in_games(sys.argv[2], sys.argv[3])
+            print(json.dumps(objects, sort_keys=False, indent=2))
             dao.close()
 
+        elif func == 'marathoners_in_year':
+            dao = Dao()
+            objects = dao.marathoners_in_year(sys.argv[2], sys.argv[3])
+            print(json.dumps(objects, sort_keys=False, indent=2))
+            dao.close()
+            
         elif func == 'query_azure_olympics_db':
             query_azure_olympics_db()
 
