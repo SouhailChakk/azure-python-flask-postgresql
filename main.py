@@ -2,6 +2,7 @@
 Usage:
   python main.py query_azure_olympics_db
   python main.py query_azure_olympics_db_orm
+  python main.py dao_query1
 Options:
   -h --help     Show this screen.
   --version     Show version.
@@ -15,6 +16,8 @@ import time
 import traceback
 
 import psycopg2
+
+from dao import Dao
 
 # see http://initd.org/psycopg/docs/
 # https://docs.microsoft.com/en-us/azure/postgresql/connect-python
@@ -186,8 +189,13 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         func = sys.argv[1].lower()
 
-        if func == 'parse_athlete_events':
-            parse_athlete_events()
+        if func == 'dao_query1':
+            dao = Dao()
+            for i in range(3, 5):
+                print('limit: {}'.format(i))
+                objects = dao.query1(i)
+                print(json.dumps(objects, sort_keys=True, indent=2))
+            dao.close()
 
         elif func == 'query_azure_olympics_db':
             query_azure_olympics_db()
