@@ -6,4 +6,4 @@
 
 export FLASK_APP=app.py
 
-python -m flask run --debugger --port 5000
+python -m flask run --debugger --port $PORT

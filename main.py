@@ -1,6 +1,5 @@
 """
 Usage:
-  python main.py parse_athlete_events
   python main.py query_azure_olympics_db
   python main.py query_azure_olympics_db_orm
 Options:
@@ -29,10 +28,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-RAW_ATHLETTE_EVENTS    = 'history-athletes-and-results/athlete_events.csv'
-PARSED_ATHLETTE_EVENTS = 'history-athletes-and-results/athlete_events_parsed.csv'
-PARSED_CSV_FIELD_DELIM = '|'
-VERSION = 'v20180819'
+VERSION = 'v20180824'
 
 Base = declarative_base()
 
@@ -64,51 +60,6 @@ def print_options(msg):
     print(msg)
     arguments = docopt(__doc__, version=VERSION)
     print(arguments)
-
-def parse_athlete_events():
-    infile  = RAW_ATHLETTE_EVENTS
-    outfile = PARSED_ATHLETTE_EVENTS
-    print('parse_athlete_events: {}'.format(infile))
-    fields  = "id|name|sex|age|height|weight|team|noc|games|year|season|city|sport|event|medal|medal_value".split('|')
-    rows, row = list(), list()
-    print("field count: {} {}".format(str(len(fields)), fields))
-    
-    # header row
-    for field in fields:
-        row.append(field)
-    rows.append(row)
-
-    with open(infile, 'rt') as csvfile:
-        rdr = csv.DictReader(csvfile)
-        for idx, obj in enumerate(rdr):
-            row = list()
-            if idx < 300000:
-                #print(obj)
-                row.append(parse_int(obj['id']))
-                row.append(parse_str(obj['name']))
-                row.append(parse_str(obj['sex']).lower())
-                row.append(parse_int(obj['age']))
-                row.append(parse_float(obj['height']))
-                row.append(parse_float(obj['weight']))
-                row.append(parse_str(obj['team']).lower())
-                row.append(parse_str(obj['noc']).lower())
-                row.append(parse_str(obj['games']).lower())
-                row.append(parse_int(obj['year']))
-                row.append(parse_str(obj['season']).lower())
-                row.append(parse_str(obj['city']).lower())
-                row.append(parse_str(obj['sport']).lower())
-                row.append(parse_str(obj['event']).lower())
-                row.append(parse_str(obj['medal']).lower())
-                row.append(medal_value(obj['medal']))
-                rows.append(row)
-
-    with open(outfile, 'w') as f:
-        for row in rows:
-            line = PARSED_CSV_FIELD_DELIM.join(row)
-            #print(line)
-            f.write(line)
-            f.write("\n")
-        print('file written: {}  count: {}'.format(outfile, len(rows)))
 
 def query_azure_olympics_db():
     conn, cursor = None, None
@@ -177,27 +128,6 @@ def query_azure_olympics_db_orm():
         # 34551|Allyson Michelle Felix
         afelix = session.query(Competitor).filter_by(id=34551).first() 
         print(afelix)
-
-        # # Construct connection string
-        # conn_string = "host={0} user={1} dbname={2} password={3} sslmode={4}".format(host, user, dbname, password, sslmode)
-        # print("conn_string: {}".format(conn_string))
-
-        # conn = psycopg2.connect(conn_string) 
-        # print("Connection established")
-
-        # cursor = conn.cursor()
-        # print("Cursor obtained")
-
-        # sql = 'SELECT * FROM competitors limit 8;'
-        # print("executing sql: {}".format(sql))
-
-        # cursor.execute(sql)
-        # rows = cursor.fetchall()
-        # for row in rows:
-        #     print(row)
-        #     id   = row[0]
-        #     name = row[1]
-        #     print('{} {}'.format(str(id), name))
     except:
         print(sys.exc_info())
         traceback.print_exc()
