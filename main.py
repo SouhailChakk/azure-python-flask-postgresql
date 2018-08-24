@@ -2,6 +2,7 @@
 Usage:
   python main.py medalists_in_games 2000 summer
   python main.py marathoners_in_year 1976 m
+  python main.py gen_container_create_command FlaskFun python-flask-postgresql1
 Options:
   -h --help     Show this screen.
   --version     Show version.
@@ -141,6 +142,43 @@ def query_azure_olympics_db_orm():
         if conn:
             conn.close()
 
+def container_create_env_var_names():
+    names = list()
+    names.append('PORT')
+    names.append('AZURE_PSQL_DB_NAME')
+    names.append('AZURE_PSQL_DB_NAMESPACE')
+    names.append('AZURE_PSQL_DB_PASS')
+    names.append('AZURE_PSQL_DB_PORT')
+    names.append('AZURE_PSQL_DB_SERVER')
+    names.append('AZURE_PSQL_DB_SERVER_ADMIN')
+    names.append('AZURE_PSQL_DB_SSLMODE')
+    names.append('AZURE_PSQL_DB_USER')
+    return names
+
+def gen_container_create_command(rg_name, ci_name):
+    print('gen_container_create_command...')
+    port_number = 80
+    strings = list()
+    strings.append('az container create --resource-group ')
+    strings.append(rg_name)
+    strings.append(' --name {}'.format(ci_name))
+    strings.append(' --image cjoakimacr.azurecr.io/python-flask-postgresql:latest')
+    strings.append(' --cpu 1 --memory 1')
+    strings.append(' --registry-username {} '.format(os.environ['AZURE_CONTAINER_REGISTRY_USER_NAME']))
+    strings.append(' --registry-password {} '.format(os.environ['AZURE_CONTAINER_REGISTRY_USER_PASS']))
+    strings.append(' --dns-name-label {}'.format(ci_name))
+    strings.append(' --ports {}'.format(port_number))
+    strings.append(' --environment-variables')
+
+    for name in container_create_env_var_names():
+        val = os.environ[name]
+        if name == 'PORT':
+            val = port_number
+        strings.append(" '{}={}'".format(name, val))
+
+    command = ''.join(strings)
+    print(command)
+
 def parse_int(s):
     try:
         return str(int(s.strip()))
@@ -205,6 +243,9 @@ if __name__ == "__main__":
 
         elif func == 'query_azure_olympics_db_orm':
             query_azure_olympics_db_orm()
+
+        elif func == 'gen_container_create_command':
+            gen_container_create_command(sys.argv[2], sys.argv[3])
         else:
             print_options('Error: invalid function: {}'.format(func))
     else:

@@ -80,6 +80,6 @@ def olympic_marathoners_json():
 # private
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 80))
     print('run port: {}'.format(port))
     app.run(host='0.0.0.0', port=port)
