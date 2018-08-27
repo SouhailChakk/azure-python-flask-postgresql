@@ -31,7 +31,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-VERSION = 'v20180824'
+VERSION = 'v20180827'
 
 Base = declarative_base()
 
@@ -180,6 +180,12 @@ def gen_container_create_command(rg_name, ci_name):
     command = ''.join(strings)
     print(command)
 
+    txt = '#!/bin/bash\n\n{}\n\n'.format(command)
+    write('aci.sh', txt)
+
+    txt = '\n{}\n\n'.format(command)
+    write('aci.ps1', txt)
+
 def parse_int(s):
     try:
         return str(int(s.strip()))
@@ -218,6 +224,11 @@ def medal_value(s):
         return '0'
     except:
         return '-1'
+
+def write(outfile, txt):
+    with open(outfile, 'w') as f:
+        f.write(txt)
+        print('file written: {}'.format(outfile))
 
 
 if __name__ == "__main__":
