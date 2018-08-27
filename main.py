@@ -181,10 +181,7 @@ def gen_container_create_command(rg_name, ci_name):
     print('generated command:')
     print(command)
 
-    print('command tokens:')
-    for token in command.split():
-        print(token)
-
+    # write both bash and PowerShell scripts for this CLI command
     txt = '#!/bin/bash\n\n{}\n\n'.format(command)
     write('aci.sh', txt)
 
