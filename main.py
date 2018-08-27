@@ -2,7 +2,7 @@
 Usage:
   python main.py medalists_in_games 2000 summer
   python main.py marathoners_in_year 1976 m
-  python main.py gen_container_create_command FlaskFun python-flask-postgresql1
+  python main.py gen_container_create_command FlaskFun python-flask-postgresql27a
 Options:
   -h --help     Show this screen.
   --version     Show version.
@@ -171,9 +171,10 @@ def gen_container_create_command(rg_name, ci_name):
     strings.append(' --environment-variables')
 
     for name in container_create_env_var_names():
-        val = os.environ[name]
         if name == 'PORT':
             val = port_number
+        else:
+            val = os.environ[name]
         strings.append(" '{}={}'".format(name, val))
 
     command = ''.join(strings)
