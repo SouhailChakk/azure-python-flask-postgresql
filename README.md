@@ -6,7 +6,7 @@ Deployed to Azure PaaS services.
 
 ## What we'll do
 
-1. Provision and Populate Azure PostgreSQL
+1. Provision and Populate Azure Services
 1. Configure Workstation
 1. Develop the App
 1. Dockerize the App
@@ -17,14 +17,32 @@ Deployed to Azure PaaS services.
 
 ---
 
-## 1. Provision and Populate Azure PostgreSQL
+## 1. Provision and Populate Azure Services
+
+### Provision an Azure Container Registry
+
+See https://azure.microsoft.com/en-us/services/container-registry/
+
+Once the registry has been created, view its settings in Azure Portal
+and set the following environment variables on your system.
+Example values are shown below:
+```
+AZURE_CONTAINER_REGISTRY_LOGIN_SERVER=cjoakimacr.azurecr.io
+AZURE_CONTAINER_REGISTRY_NAME=cjoakimacr
+AZURE_CONTAINER_REGISTRY_USER_NAME=cjoakimacr
+AZURE_CONTAINER_REGISTRY_USER_PASS=<secret>
+```
+
+Also, you will probably want an account on DockerHub as well:
+See https://hub.docker.com
+
+### Provision and Populate Azure PostgreSQL
 
 In the Azure Portal UI, provision a **Azure Database for PostgreSQL**
 
 Once the database has been created, view its settings in Azure Portal
 and set the following environment variables on your system.
-Example values are shown:
-
+Example values are shown below:
 ```
 AZURE_PSQL_DB_NAME=olympics
 AZURE_PSQL_DB_NAMESPACE=cjoakimpsql
@@ -51,6 +69,10 @@ To load the 'competitors' table of the 'olympics' Azure DB with the
 $ ./azure_load.sh
 ```
 
+### Provision an Azure App Service with Docker
+
+See section 6 below.
+
 ---
 
 ## 2. Configure Workstation
@@ -58,8 +80,17 @@ $ ./azure_load.sh
 These instructions are for a Linux or macOS workstation.
 Alternatively, you could use a remote Linux Data Science Virtual Machine (DSVM).
 
-First, install the Azure CLI (Command Line Interface).
-See https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
+First, install the latest version of the Azure CLI (Command Line Interface).
+See https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
+
+Verify that you have the latest version of the CLI:
+```
+$ az --version
+azure-cli (2.0.44)
+...
+```
+
+You should see version 2.0.44 or later.
 
 Then, execute some CLI commands:
 ```
@@ -179,14 +210,21 @@ $ az group create --location eastus --name FlaskFun
 
 Then create the ACI in the new Resource Group:
 ```
-$ az container create --resource-group FlaskFun --name python-flask-postgresql4 --image cjoakimacr.azurecr.io/python-flask-postgresql:latest --cpu 1 --memory 1 --registry-username cjoakimacr  --registry-password <secret>  --dns-name-label python-flask-postgresql4 --ports 80 --environment-variables 'PORT=80' 'AZURE_PSQL_DB_NAME=olympics' 'AZURE_PSQL_DB_NAMESPACE=cjoakimpsql' 'AZURE_PSQL_DB_PASS=<secret>' 'AZURE_PSQL_DB_PORT=5432' 'AZURE_PSQL_DB_SERVER=cjoakimpsql.postgres.database.azure.com' 'AZURE_PSQL_DB_SERVER_ADMIN=cjoakim@cjoakimpsql' 'AZURE_PSQL_DB_SSLMODE=require' 'AZURE_PSQL_DB_USER=cjoakim'
+$ az container create --resource-group FlaskFun --name "python-flask-postgresql27h" --image "cjoakimacr.azurecr.io/python-flask-postgresql:latest" --cpu 1 --memory 1 --registry-username "cjoakimacr" --registry-password "<secret>" --dns-name-label "python-flask-postgresql27h" --ports "80" --environment-variables 'PORT=80' 'AZURE_PSQL_DB_NAME=olympics' 'AZURE_PSQL_DB_NAMESPACE=cjoakimpsql' 'AZURE_PSQL_DB_PASS=big.DATA-18' 'AZURE_PSQL_DB_PORT=5432' 'AZURE_PSQL_DB_SERVER=cjoakimpsql.postgres.database.azure.com' 'AZURE_PSQL_DB_SERVER_ADMIN=cjoakim@cjoakimpsql' 'AZURE_PSQL_DB_SSLMODE=require' 'AZURE_PSQL_DB_USER=cjoakim'
 
 $ az container list
 ```
 
+That lengthy **az container create** command can be generated with main.py in this repo.  It reads and uses the several AZURE_xxx environment variables listed above:
+```
+$ python main.py gen_container_create_command <resource-group> <container-instance-name>
+$ python main.py gen_container_create_command FlaskFun python-flask-postgresql27c
+```
+
 Invoke the running ACI with your browser:
-- http://python-flask-postgresql.eastus.azurecontainer.io:5000/
-- http://python-flask-postgresql.eastus.azurecontainer.io:5000/env
+- http://python-flask-postgresql27g.eastus.azurecontainer.io/
+- http://python-flask-postgresql27g.eastus.azurecontainer.io/env
+- http://python-flask-postgresql27g.eastus.azurecontainer.io/olympic_marathoners?year=1984&sex=f
 
 See content similar to this:
 ![homepage-img](img/homepage.png "")
