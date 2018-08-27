@@ -2,7 +2,7 @@
 Usage:
   python main.py medalists_in_games 2000 summer
   python main.py marathoners_in_year 1976 m
-  python main.py gen_container_create_command FlaskFun python-flask-postgresql27a
+  python main.py gen_container_create_command FlaskFun python-flask-postgresql27c
 Options:
   -h --help     Show this screen.
   --version     Show version.
@@ -165,7 +165,7 @@ def gen_container_create_command(rg_name, ci_name):
     strings.append(' --image cjoakimacr.azurecr.io/python-flask-postgresql:latest')
     strings.append(' --cpu 1 --memory 1')
     strings.append(' --registry-username {} '.format(os.environ['AZURE_CONTAINER_REGISTRY_USER_NAME']))
-    strings.append(' --registry-password {} '.format(os.environ['AZURE_CONTAINER_REGISTRY_USER_PASS']))
+    strings.append(' --registry-password "{}" '.format(os.environ['AZURE_CONTAINER_REGISTRY_USER_PASS']))
     strings.append(' --dns-name-label {}'.format(ci_name))
     strings.append(' --ports {}'.format(port_number))
     strings.append(' --environment-variables')
@@ -178,7 +178,12 @@ def gen_container_create_command(rg_name, ci_name):
         strings.append(" '{}={}'".format(name, val))
 
     command = ''.join(strings)
+    print('generated command:')
     print(command)
+
+    print('command tokens:')
+    for token in command.split():
+        print(token)
 
     txt = '#!/bin/bash\n\n{}\n\n'.format(command)
     write('aci.sh', txt)
