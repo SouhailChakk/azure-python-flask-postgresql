@@ -7,14 +7,13 @@ Deployed to Azure PaaS services.
 ## What we'll do
 
 1. Provision and Populate Azure PostgreSQL
-1. Configure workstation
-1. Develop the app
-1. Dockerize the app
+1. Configure Workstation
+1. Develop the App
+1. Dockerize the App
 1. Deploy as a Docker image to Azure Container Instance
 1. Deploy as a Docker image to Azure App Service
 1. Deploy as a GitHub repo to a Data Science Virtual Machine (DSVM)
 1. Deploy as a Docker image to a Data Science Virtual Machine (DSVM)
-1. Deploy to Azure App Service from GitHub
 
 ---
 
@@ -54,7 +53,7 @@ $ ./azure_load.sh
 
 ---
 
-## 1. Configure workstation
+## 2. Configure Workstation
 
 These instructions are for a Linux or macOS workstation.
 Alternatively, you could use a remote Linux Data Science Virtual Machine (DSVM).
@@ -88,14 +87,14 @@ Python 3.x and pip are assumed to be installed.
 
 ---
 
-## 2. Develop the app
+## 3. Develop the App
 
 The application in this repository is a very simple Python3/Flask web application.
 It is intended to simply demonstrate deployment to Azure.
 
 ---
 
-## 3. Dockerize the app
+## 4. Dockerize the App
 
 See the **Dockerfile** which is used to create a **Docker Image** of this app.
 
@@ -158,7 +157,7 @@ $ az acr repository list --name cjoakimacr --output table
 
 ---
 
-## 4. Deploy as a Docker image to Azure Container Instance (ACI)
+## 5. Deploy as a Docker image to Azure Container Instance (ACI)
 
 The Azure CLI can be used to do this.
 
@@ -194,7 +193,7 @@ See content similar to this:
 
 ---
 
-## 5. Deploy as a Docker image to Azure App Service
+## 6. Deploy as a Docker image to Azure App Service
 
 In Azure Portal, create a **Web App** of type **Docker** and configure
 it to use your image from Azure Container Registry as follows:
@@ -206,7 +205,7 @@ http://python-flask-postgresql.eastus.azurecontainer.io:5000/
 
 ---
 
-## 6. Deploy as a GitHub repo to a Data Science Virtual Machine
+## 7. Deploy as a GitHub repo to a Data Science Virtual Machine
 
 The DSVM contains many common pre-installed Data Science and Developer tools - 
 python2, python3, R, git, docker, java, ant, maven, php, ruby, etc.
@@ -246,7 +245,7 @@ See https://www.anaconda.com
 
 ---
 
-## 7. Deploy as a Docker image to a Data Science Virtual Machine (DSVM)
+## 8. Deploy as a Docker image to a Data Science Virtual Machine (DSVM)
 
 Since both the Azure CLI and Docker are installed on the DSVM, you can also execute
 your Docker image, rather than the source code, on the DSVM.
@@ -262,7 +261,7 @@ $ sudo docker stop -t 1 6a4895321e9e
 
 ---
 
-## 8. Deploy to Azure App Service from GitHub
+## 9. Deploy to Azure App Service from GitHub
 
 See https://docs.microsoft.com/en-us/visualstudio/python/publishing-python-web-applications-to-azure-from-visual-studio?view=vs-2017
 
