@@ -77,8 +77,15 @@ See section 6 below.
 
 ## 2. Configure Workstation
 
-These instructions are for a Linux or macOS workstation.
+These instructions are for a Linux, macOS, or Windows workstation.
 Alternatively, you could use a remote Linux Data Science Virtual Machine (DSVM).
+
+### Python 3
+
+Python 3.x and pip are assumed to be installed.
+
+
+### Install the latest Azure CLI
 
 First, install the latest version of the Azure CLI (Command Line Interface).
 See https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
@@ -111,10 +118,11 @@ $ az login --help
 $ az login
 ```
 
+### Install Docker
+
 Next, download and install Docker Community Edition.
 See https://www.docker.com/get-docker
-
-Python 3.x and pip are assumed to be installed.
+See https://docs.docker.com/docker-for-windows/install/
 
 ---
 
@@ -192,7 +200,7 @@ $ az acr repository list --name cjoakimacr --output table
 
 The Azure CLI can be used to do this.
 
-First create an Azure **resource group**:
+First create an Azure **resource group** named FlaskFun:
 ```
 $ az group create --location eastus --name FlaskFun
 
